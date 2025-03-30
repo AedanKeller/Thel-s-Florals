@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thel's Floral</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32; /* Dark green */
+            --secondary-color: #66bb6a; /* Light green */
+            --accent-color: #c5e1a5; /* Very light green */
+            --text-color: #1b3023; /* Dark forest green */
+            --light-color: #f1f8e9; /* Extremely light green */
+            --dark-accent: #1b5e20; /* Very dark green */
+            --transition-speed: 0.4s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header styling */
+        .header {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/api/placeholder/1600/800');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.9);
+            z-index: -1;
+        }
+        
+        .header-content {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            background-color: rgba(30, 94, 36, 0.7);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            max-width: 600px;
+        }
+        
+        .header-content.hidden {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        
+        .logo {
+            font-size: 3.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-style: italic;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Navigation styling */
+        nav {
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        nav.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-logo {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width var(--transition-speed) ease;
+        }
+        
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Main content styling */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            bottom: 0;
+            left: 0;
+            transition: width 0.5s ease;
+        }
+        
+        .section:hover .section-title::after {
+            width: 100%;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        /* Services styling */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+            top: 0;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            transition: transform var(--transition-speed) ease;
+        }
+        
+        .service-card:hover .service-img {
+            transform: scale(1.05);
+        }
+        
+        .service-img.bouquets {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-img.weddings {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-img.events {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-img.plants {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-img.workshops {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-img.subscriptions {
+            background-image: url('/api/placeholder/400/320');
+        }
+        
+        .service-content {
+            padding: 25px;
+        }
+        
+        .service-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        /* Contact form styling */
+        .contact-form {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: 0 auto;
+            transition: transform var(--transition-speed) ease;
+        }
+        
+        .contact-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+            background-color: white;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 187, 106, 0.4);
+        }
+        
+        /* Contact info styling */
+        .contact-info {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            width: 220px;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+        
+        .contact-card:hover .contact-icon {
+            transform: scale(1.2);
+        }
+        
+        .contact-card h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        /* Footer styling */
+        .footer {
+            background-color: var(--dark-accent);
+            padding: 60px 0 30px;
+            color: white;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .social-links {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            margin-top: 30px;
+            opacity: 0.7;
+        }
+        
+        /* Page transition styles */
+        #home-content, #contact-content {
+            display: none;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        
+        #home-content.active, #contact-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .header {
+                height: 400px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .services {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-image"></div>
+        <div class="header-content hidden">
+            <h1 class="logo">Thel's Floral</h1>
+            <p class="tagline">Artful Arrangements for Life's Special Moments</p>
+        </div>
+    </header>
+    
+    <nav id="main-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">Thel's Floral</a>
+            <ul class="nav-links">
+                <li><a href="#" id="home-link" class="active" onclick="showPage('home'); return false;">Home</a></li>
+                <li><a href="#" id="contact-link" onclick="showPage('contact'); return false;">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main">
+        <div id="home-content" class="active">
+            <section class="section">
+                <h2 class="section-title">Welcome to Thel's Floral</h2>
+                <p>At Thel's Floral, we believe that flowers have the power to transform moments into memories. Since 2010, our passionate team of floral artists has been bringing joy, comfort, and beauty to our community through thoughtfully crafted floral arrangements.</p>
+                <p>Located in the heart of the city, our boutique florist shop sources the freshest, seasonal blooms from local growers and international markets to ensure the highest quality and most unique selection for our customers.</p>
+                <p>Whether you're celebrating a special occasion, expressing sympathy, or simply brightening someone's day, we're here to help you find the perfect floral expression.</p>
+            </section>
+            
+            <section class="section">
+                <h2 class="section-title">Our Services</h2>
+                <p>We offer a wide range of floral services, tailored to meet your unique needs and preferences:</p>
+                
+                <div class="services">
+                    <div class="service-card">
+                        <div class="service-img bouquets"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Custom Bouquets</h3>
+                            <p>Hand-crafted arrangements for any occasion, from birthday celebrations to anniversary surprises, or just because.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-img weddings"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Wedding Flowers</h3>
+                            <p>Stunning bridal bouquets, centerpieces, and venue decorations that bring your wedding vision to life.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-img events"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Event Florals</h3>
+                            <p>Transform your corporate events, parties, and special celebrations with elegant floral installations.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-img plants"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Indoor Plants</h3>
+                            <p>Beautiful selection of houseplants, succulents, and terrariums to bring natural beauty into your home or office.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-img workshops"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Floral Workshops</h3>
+                            <p>Learn the art of floral design through our hands-on workshops for individuals, groups, and special events.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-img subscriptions"></div>
+                        <div class="service-content">
+                            <h3 class="service-title">Flower Subscriptions</h3>
+                            <p>Regular deliveries of seasonal blooms to your home or office, bringing continuous joy throughout the year.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div id="contact-content">
+            <section class="section">
+                <h2 class="section-title">Contact Us</h2>
+                <p>Have questions about our services or want to place an order? Reach out to us using the form below or visit our shop. We'd love to hear from you!</p>
+                
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="What is your message about?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" placeholder="Type your message here..."></textarea>
+                    </div>
+                    
+                    <button type="submit">Send Message <span>→</span></button>
+                </form>
+                
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">📍</div>
+                        <h3>Visit Us</h3>
+                        <p>123 Blossom Street<br>Flowertown, FT 12345</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">📞</div>
+                        <h3>Call Us</h3>
+                        <p>(555) 123-4567</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">⏰</div>
+                        <h3>Hours</h3>
+                        <p>Mon-Sat: 9am-6pm<br>Sun: 10am-4pm</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">Thel's Floral</div>
+            <p>Creating beautiful floral arrangements for all of life's special moments.</p>
+            
+            <div class="social-links">
+                <a href="#">📱</a>
+                <a href="#">📷</a>
+                <a href="#">📘</a>
+                <a href="#">📌</a>
+            </div>
+            
+            <p class="copyright">© 2025 Thel's Floral. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Page transition
+        function showPage(page) {
+            // Remove active class from all content
+            document.getElementById('home-content').classList.remove('active');
+            document.getElementById('contact-content').classList.remove('active');
+            
+            // Remove active class from all links
+            document.getElementById('home-link').classList.remove('active');
+            document.getElementById('contact-link').classList.remove('active');
+            
+            // Add active class to selected content and link with delay for transition
+            setTimeout(() => {
+                document.getElementById(page + '-content').classList.add('active');
+                document.getElementById(page + '-link').classList.add('active');
+            }, 50);
+        }
+        
+        // Scroll animations
+        window.addEventListener('DOMContentLoaded', () => {
+            // Reveal header content
+            setTimeout(() => {
+                document.querySelector('.header-content').classList.remove('hidden');
+            }, 300);
+            
+            // Navbar scroll effect
+            const nav = document.getElementById('main-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+            
+            // Reveal sections on scroll
+            const sections = document.querySelectorAll('.section');
+            
+            const revealSection = () => {
+                sections.forEach(section => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (sectionTop < windowHeight - 150) {
+                        section.classList.add('visible');
+                    }
+                });
+            };
+            
+            // Initial check
+            revealSection();
+            
+            // Check on scroll
+            window.addEventListener('scroll', revealSection);
+        });
+    </script>
+</body>
+</html>
